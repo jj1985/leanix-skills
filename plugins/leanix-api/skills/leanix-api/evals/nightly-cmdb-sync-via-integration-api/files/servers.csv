@@ -1,0 +1,9 @@
+hostname,serial,os,environment,app_id,app_name
+pay-db-01,SN-884412,Red Hat Enterprise Linux 9,production,APP-1001,Payroll Portal
+pay-app-01,SN-884413,Red Hat Enterprise Linux 9,production,APP-1001,Payroll Portal
+pay-app-02,SN-884414,Red Hat Enterprise Linux 9,production,APP-1001,Payroll Portal
+crm-web-01,SN-991020,Windows Server 2022,production,APP-2040,Customer Relationship Hub
+crm-sql-01,SN-991021,Windows Server 2022,production,APP-2040,Customer Relationship Hub
+crm-web-stg,SN-991077,Windows Server 2022,staging,APP-2040,Customer Relationship Hub
+whs-edge-01,SN-120305,Ubuntu 24.04 LTS,production,APP-3310,Warehouse Scanner Gateway
+whs-edge-02,SN-120306,Ubuntu 24.04 LTS,production,APP-3310,Warehouse Scanner Gateway

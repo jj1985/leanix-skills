@@ -1,0 +1,3708 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Integration API"
+    },
+    "tags": [
+        {
+            "name": "examples"
+        },
+        {
+            "name": "configurations"
+        },
+        {
+            "name": "synchronizationRuns"
+        }
+    ],
+    "security": [
+        {
+            "token": []
+        }
+    ],
+    "paths": {
+        "/examples/starterExample": {
+            "get": {
+                "description": "Returns a starter example including an Input object and processor configuration",
+                "tags": [
+                    "examples"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a complete input example with processor configurations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InputWithProcessorConfig"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/examples/advancedExample": {
+            "get": {
+                "description": "Returns an advanced example including an Input object and processor configuration",
+                "tags": [
+                    "examples"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a complete input example with processor configurations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InputWithProcessorConfig"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configurations": {
+            "get": {
+                "description": "Returns a list of available processor configurations",
+                "tags": [
+                    "configurations"
+                ],
+                "operationId": "getProcessorConfigurations",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/connectorType"
+                    },
+                    {
+                        "$ref": "#/components/parameters/connectorId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/connectorVersion"
+                    },
+                    {
+                        "$ref": "#/components/parameters/processingDirection"
+                    },
+                    {
+                        "$ref": "#/components/parameters/processingMode"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProcessorConfiguration"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            },
+            "put": {
+                "description": "Inserts a new processor configuration or updates an existing one",
+                "tags": [
+                    "configurations"
+                ],
+                "operationId": "upsertProcessorConfiguration",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProcessorConfiguration"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Upsert successful."
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a single processor configuration",
+                "tags": [
+                    "configurations"
+                ],
+                "operationId": "deleteProcessorConfiguration",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/connectorType"
+                    },
+                    {
+                        "$ref": "#/components/parameters/connectorId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/connectorVersion"
+                    },
+                    {
+                        "$ref": "#/components/parameters/processingDirection"
+                    },
+                    {
+                        "$ref": "#/components/parameters/processingMode"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Not all necessary fields are set in parameters."
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No such processor configuration found."
+                    },
+                    "422": {
+                        "description": "Could not process the given processor configuration."
+                    },
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns": {
+            "get": {
+                "description": "Returns the status of all existing synchronization runs",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunsStatusList",
+                "responses": {
+                    "200": {
+                        "description": "A list containing current status of all available synchronization runs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StatusResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a synchronization run.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "createSynchronizationRun",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/start"
+                    },
+                    {
+                        "$ref": "#/components/parameters/testWithStart"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/Input"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns the ID of the new synchronization run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StatusResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/start": {
+            "post": {
+                "description": "Starts an existing but not yet started synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "startSynchronizationRun",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/test"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The synchronization run was successfully started and is now in progress"
+                    },
+                    "400": {
+                        "description": "The synchronization run was already started earlier. It is not possible to start the same synchronization run twice.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/progress": {
+            "get": {
+                "description": "Shows the progress of a synchronization run, it gives updated counters of the run level that is in execution.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunProgress",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The synchronization run exists and progress information was searched.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SyncRunInboundProgressReport"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/stop": {
+            "post": {
+                "description": "Stops a running synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "stopSynchronizationRun",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The synchronization run was successfully stopped."
+                    },
+                    "400": {
+                        "description": "The synchronization is not yet pending or running. It is not possible to stop a synchronization that is not pending or running.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/status": {
+            "get": {
+                "description": "Returns the status of an existing synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunStatus",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the status of an existing synchronization run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Warning"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/stats": {
+            "get": {
+                "description": "Returns detailed statistics about the execution of a synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunStats",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns an object with multiple entries based on the direction (inbound or outbound) of the synchronization run",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            },
+                            "inbound": {
+                                "examples": {
+                                    "response": {
+                                        "value": {
+                                            "statusChanges": [
+                                                {
+                                                    "status": "CREATED",
+                                                    "timestamp": "2020-10-27T15:42:52.645115Z"
+                                                },
+                                                {
+                                                    "status": "PENDING",
+                                                    "timestamp": "2020-10-27T15:42:52.737683Z"
+                                                },
+                                                {
+                                                    "status": "IN_PROGRESS",
+                                                    "timestamp": "2020-10-27T15:42:55.896493Z"
+                                                },
+                                                {
+                                                    "status": "FINISHED",
+                                                    "timestamp": "2020-10-27T15:42:58.278413Z"
+                                                }
+                                            ],
+                                            "processorStatistics": [
+                                                {
+                                                    "processorIndex": 0,
+                                                    "processorName": "Apps from Deployments",
+                                                    "processingTotalDuration": "PT0.067352728S",
+                                                    "processingNetworkDuration": "PT0.048198277S",
+                                                    "processedContentCount": 2,
+                                                    "graphQLRequestCount": 2,
+                                                    "errorCount": 0
+                                                },
+                                                {
+                                                    "processorIndex": 1,
+                                                    "processorName": "ITComponent from Cluster",
+                                                    "processingTotalDuration": "PT0.137036974S",
+                                                    "processingNetworkDuration": "PT0.131972034S",
+                                                    "processedContentCount": 1,
+                                                    "graphQLRequestCount": 2,
+                                                    "errorCount": 0
+                                                },
+                                                {
+                                                    "processorIndex": 2,
+                                                    "processorName": "Rel from Apps to ITComponent",
+                                                    "processingTotalDuration": "PT0.042523432S",
+                                                    "processingNetworkDuration": "PT0.040348016S",
+                                                    "processedContentCount": 2,
+                                                    "graphQLRequestCount": 2,
+                                                    "errorCount": 0
+                                                }
+                                            ],
+                                            "singleRunLevelStatistics": [
+                                                {
+                                                    "singleRunIndex": 0,
+                                                    "totalTime": "PT0.409781311S",
+                                                    "prefetchTime": "PT0.000326503S",
+                                                    "processTime": "PT0.405353676S",
+                                                    "processedContentCount": 3,
+                                                    "errorCount": 0
+                                                },
+                                                {
+                                                    "singleRunIndex": 1,
+                                                    "totalTime": "PT0.09956918S",
+                                                    "prefetchTime": "PT0.0000753S",
+                                                    "processTime": "PT0.095250747S",
+                                                    "processedContentCount": 2,
+                                                    "errorCount": 0
+                                                }
+                                            ],
+                                            "deletedObjects": [],
+                                            "totalBlockingTime": "PT1S"
+                                        }
+                                    }
+                                }
+                            },
+                            "outbound": {
+                                "examples": {
+                                    "response": {
+                                        "value": {
+                                            "statusChanges": [
+                                                {
+                                                    "status": "CREATED",
+                                                    "timestamp": "2020-10-27T15:43:55.820906Z"
+                                                },
+                                                {
+                                                    "status": "PENDING",
+                                                    "timestamp": "2020-10-27T15:43:55.902542Z"
+                                                },
+                                                {
+                                                    "status": "IN_PROGRESS",
+                                                    "timestamp": "2020-10-27T15:44:00.855281Z"
+                                                },
+                                                {
+                                                    "status": "FINISHED",
+                                                    "timestamp": "2020-10-27T15:44:01.791416Z"
+                                                }
+                                            ],
+                                            "processorStatistics": [
+                                                {
+                                                    "processorIndex": 0,
+                                                    "processorName": "Export to LDIF",
+                                                    "networkDuration": "PT0.071077757S",
+                                                    "processingDuration": "PT0.02168897S",
+                                                    "itemsInScopeCount": 2,
+                                                    "processedContentCount": 2,
+                                                    "errorCount": 0
+                                                }
+                                            ],
+                                            "totalBlockingTime": "PT0S"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/results": {
+            "get": {
+                "description": "Returns the results of a finished synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunResults",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the results of a finished synchronization run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LeanIxDataInterchangeFormat"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "This code is returned, when the inbound run has no LDIF to produce, or when the LDIF is not yet ready."
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/resultsUrl": {
+            "get": {
+                "description": "Returns the url to the results of a finished synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunResultsUrl",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the url to the results of a finished synchronization run or in case the run exists but is not yet finished a null value for the url.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UrlContainer"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "No synchronization run with the given id exists.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Warning"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/warnings": {
+            "get": {
+                "description": "Returns the warnings of a synchronization run",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunWarnings",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "The zero-based index of the first element to retrieve",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The number of elements that should be retrieved",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the warnings of a synchronization run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Warning"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The parameters offset and limit must satisfy the condition offset MOD limit == 0, or if the synchornisation does not have a SyncLog Id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/withConfig": {
+            "post": {
+                "description": "Starts a new synchronization run using the processor configuration and input object provided in the request.\n>__Please do not use this endpoint for production use cases. It was built for testing configurations only.__",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "createSynchronizationRunWithConfig",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/start"
+                    },
+                    {
+                        "$ref": "#/components/parameters/testWithStart"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/InputWithProcessorConfig"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the ID of the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SynchronizationRun"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/withUrlInput": {
+            "post": {
+                "description": "Starts a new synchronization run using a DataProvider information to obtain the LDIF input",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "createSynchronizationRunWithUrlInput",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/start"
+                    },
+                    {
+                        "$ref": "#/components/parameters/testWithStart"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/DataProvider"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the ID of the run and the processor configuration selected for the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SynchronizationRunWithConfiguration"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/withExecutionGroupAndUrlInput": {
+            "post": {
+                "description": "Starts a new synchronization run using a DataProvider information to obtain the LDIF input, but choose a configuration based on execution group.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "createSynchronizationRunWithExecutionGroupAndUrlInput",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "groupName",
+                        "description": "The name of execution group",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/start"
+                    },
+                    {
+                        "$ref": "#/components/parameters/testWithStart"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/DataProvider"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the ID of the run and the processor configuration selected for the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SynchronizationRunWithConfiguration"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    },
+                    "404": {
+                        "description": "There is no configuration matching with the execution group value"
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/withExecutionGroup": {
+            "post": {
+                "description": "Starts a new synchronization run using combined processor configuration within an execution group and input object provided in the request.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "createSynchronizationRunWithExecutionGroup",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "groupName",
+                        "description": "The name of execution group",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/start"
+                    },
+                    {
+                        "$ref": "#/components/parameters/testWithStart"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/Input"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the ID of the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SynchronizationRunWithConfiguration"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Execution group contains processor configurations that are incompatible (both 'processingDirection' and 'processingMode' must be the same)."
+                    },
+                    "404": {
+                        "description": "No processor configuration is found for the given execution group."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/debug": {
+            "get": {
+                "description": "Provides the Debug logs generated during the synchronization runs.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunDebugInformation",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "The zero-based index of the first element to retrieve",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "The number of elements that should be retrieved",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the debug logs of the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InboundContentProcessingResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No synchronizations with given ID exists."
+                    }
+                }
+            }
+        },
+        "/synchronizationRuns/{id}/debugVariables": {
+            "get": {
+                "description": "Provides the Debug variables generated during the synchronization runs.",
+                "tags": [
+                    "synchronizationRuns"
+                ],
+                "operationId": "getSynchronizationRunDebugVariables",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/syncRunId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation, the response contains the debug variables of the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InboundDebugVariables"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No synchronizations with given ID exists."
+                    }
+                }
+            }
+        },
+        "/fastSynchronizationRuns": {
+            "post": {
+                "description": "Creates a fast synchronization run.",
+                "tags": [
+                    "fastSynchronizationRuns"
+                ],
+                "operationId": "createSynchronizationFastRun",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/test"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/Input"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Results of the execution, it includes error messages and statistics about the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FastRunResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Fast execution does not support outbound yet."
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/fastSynchronizationRuns/withConfig": {
+            "post": {
+                "description": "Starts a new fast run synchronization using the processor configuration and input object provided in the request.\n>__Please do not use this endpoint for production use cases. It was built for testing configurations only.__",
+                "tags": [
+                    "fastSynchronizationRuns"
+                ],
+                "operationId": "createSynchronizationFastRunWithConfig",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/test"
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/InputWithProcessorConfig"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Results of the execution, it includes error messages and statistics about the run.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FastRunResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Fast execution does not support outbound yet."
+                    },
+                    "403": {
+                        "description": "The user is not allowed to use this endpoint."
+                    }
+                }
+            }
+        },
+        "/storages/azure": {
+            "get": {
+                "description": "Provides storage resources that can be used for synchronisation runs. It creates a blob file in Azure Storage.",
+                "tags": [
+                    "storages"
+                ],
+                "operationId": "createInAzure",
+                "responses": {
+                    "200": {
+                        "description": "A new blob file was created and its ready for writing in Azure Blob Storage.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageManagerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error during the provisioning of a new blob file."
+                    }
+                }
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/services/integration-api/v1"
+        }
+    ],
+    "components": {
+        "parameters": {
+            "connectorId": {
+                "name": "connectorId",
+                "description": "The identifier of the connector instance",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "connectorType": {
+                "name": "connectorType",
+                "description": "The type of connector that is used",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "connectorVersion": {
+                "name": "connectorVersion",
+                "description": "The version of the connector that is expected to process this LDIF file",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "processingDirection": {
+                "name": "processingDirection",
+                "description": "The data flow direction, could be [inbound, outbound]",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "inbound",
+                        "outbound"
+                    ]
+                }
+            },
+            "processingMode": {
+                "name": "processingMode",
+                "description": "The processing mode, could be [partial, full]",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "partial",
+                        "full"
+                    ]
+                }
+            },
+            "syncRunId": {
+                "name": "id",
+                "description": "The ID of the synchronization run",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "test": {
+                "name": "test",
+                "description": "If true a dry run without any changes will be performed",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "testWithStart": {
+                "name": "test",
+                "description": "If true a dry run without any changes will be performed. This parameter requires the start parameter to be set to true as well",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "start": {
+                "name": "start",
+                "description": "If true the created run will be enqueued to be started",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "requestBodies": {
+            "InputWithProcessorConfig": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/InputWithProcessorConfig"
+                        }
+                    }
+                }
+            },
+            "Input": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Input"
+                        }
+                    }
+                }
+            },
+            "DataProvider": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/DataProvider"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "token": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "/services/mtm/v1/oauth2/token",
+                        "scopes": {}
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "ChunkInformation": {
+                "type": "object",
+                "properties": {
+                    "firstDataObject": {
+                        "description": "Index of the first data object in this chunk",
+                        "type": "integer",
+                        "format": "int64",
+                        "readOnly": true,
+                        "minimum": 0
+                    },
+                    "lastDataObject": {
+                        "description": "Index of the last data object in this chunk",
+                        "type": "integer",
+                        "format": "int64",
+                        "readOnly": true,
+                        "minimum": 0
+                    },
+                    "maxDataObject": {
+                        "description": "Index of the last data object over all chunks",
+                        "type": "integer",
+                        "format": "int64",
+                        "readOnly": true,
+                        "minimum": 0
+                    }
+                }
+            },
+            "Content": {
+                "description": "An object containing all necessary information about changes that are going to be made by the processors",
+                "type": "object",
+                "required": [
+                    "type",
+                    "id",
+                    "data"
+                ],
+                "properties": {
+                    "type": {
+                        "description": "The type of content defined by this entry",
+                        "example": "Deployment",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "id": {
+                        "description": "The (External) ID that identifies the fact sheet",
+                        "example": "684c16bf-198c-11f9-9d08-926300573fbf",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "data": {
+                        "description": "Processor specific fields that correspond to changes",
+                        "example": {
+                            "app": "chartmuseum",
+                            "chart": "chartmuseum-1.8.4",
+                            "heritage": "Tiller",
+                            "name": "chartmuseum-chartmuseum",
+                            "release": "chartmuseum",
+                            "clusterName": "leanix-westeurope-int-aks"
+                        },
+                        "type": "object",
+                        "readOnly": true,
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "Credentials": {
+                "description": "Credential settting for synchronization run",
+                "type": "object",
+                "properties": {
+                    "apiToken": {
+                        "description": "The API token that is used for executing the synchronization run",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "useTechnicalUser": {
+                        "description": "Whether to use the technical user of the workspace to execute the synchronization run. If true, 'apiToken' field will be ignored.",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    },
+                    "technicalUserId": {
+                        "description": "The ID of the technical user that is used for executing the synchronization run.",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "DataProvider": {
+                "description": "Definition of the provider which provides the inbound LDIF",
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "description": "The url from which the inbound LDIF should be downloaded from",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "type": {
+                        "description": "The type of storage provider. Use 'azureStorage' to optimize for Azure Storage, or null for other types.",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                },
+                "example": {
+                    "url": "https://...",
+                    "type": "azureStorage"
+                }
+            },
+            "DeletionScope": {
+                "description": "Definition of the entities to be removed if they are not touched by the processor configuration",
+                "type": "object",
+                "properties": {
+                    "maximumDeletionRatio": {
+                        "description": "Maximum Ratio (percentage) between elements to be deleted compared to size of the scope. If this limit is violated the deletion is canceled",
+                        "type": "object",
+                        "items": {
+                            "$ref": "#/components/schemas/MaximumDeletionRatio"
+                        }
+                    },
+                    "factSheets": {
+                        "description": "The scopes for fact sheet entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FactSheetDeletionScope"
+                        }
+                    },
+                    "relations": {
+                        "description": "The scopes for fact sheet entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RelationDeletionScope"
+                        }
+                    },
+                    "tags": {
+                        "description": "The scopes for fact sheet entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagDeletionScope"
+                        }
+                    },
+                    "subscriptions": {
+                        "description": "The scopes for subscriptions entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SubscriptionDeletionScope"
+                        }
+                    },
+                    "documents": {
+                        "description": "The scopes for document entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DocumentDeletionScope"
+                        }
+                    },
+                    "impacts": {
+                        "description": "The scopes for impact entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ImpactDeletionScope"
+                        }
+                    },
+                    "todos": {
+                        "description": "The scopes for To-dos entities",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TodoDeletionScope"
+                        }
+                    }
+                }
+            },
+            "DocumentDeletionScope": {
+                "description": "The criteria for selection of documents.",
+                "type": "object",
+                "properties": {
+                    "documentMatches": {
+                        "description": "A list of matching patterns that document names have to match to be considered for deletion",
+                        "readOnly": true,
+                        "items": {
+                            "example": "^(.*)$",
+                            "type": "string",
+                            "readOnly": true,
+                            "minLength": 0,
+                            "maxLength": 500
+                        }
+                    },
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "read": {
+                        "$ref": "#/components/schemas/ReadFactSheetSection"
+                    }
+                }
+            },
+            "DocumentInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "identifier"
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified fact sheet",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "ExternalIdSetTemplate": {
+                "description": "The template that generates one or more fact sheet identifiers using the ExternalID of the fact sheets",
+                "type": "object",
+                "required": [
+                    "ids",
+                    "type"
+                ],
+                "properties": {
+                    "ids": {
+                        "description": "The ExternalIDs of the fact sheets",
+                        "example": "${content.exIds}",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/KeyTemplate"
+                    }
+                }
+            },
+            "ExecutionRestrictions": {
+                "description": "When used only the specified users or the default technical user can execute the processor",
+                "properties": {
+                    "defaultTechnicalUser": {
+                        "description": "Execution is restricted to the default technical user",
+                        "type": "boolean",
+                        "readOnly": true
+                    },
+                    "userIds": {
+                        "description": "Execution is restricted to the specified users",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "readOnly": true
+                        }
+                    }
+                }
+            },
+            "ExternalIdTemplate": {
+                "description": "The template that generates the fact sheet identifier using the ExternalID of the fact sheet",
+                "type": "object",
+                "required": [
+                    "id",
+                    "type"
+                ],
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/KeyTemplate"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/KeyTemplate"
+                    }
+                }
+            },
+            "FactSheetInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "identifier",
+                            "type"
+                        ],
+                        "properties": {
+                            "type": {
+                                "description": "An expression resolving to a Fact Sheet type present in the data model of your LeanIX workspace",
+                                "example": "Application",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified fact sheet",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            },
+                            "read": {
+                                "$ref": "#/components/schemas/ReadFactSheetSection"
+                            }
+                        }
+                    }
+                ]
+            },
+            "SearchScope": {
+                "description": "The criteria for selecting fact sheets and filter in combination with LDIF data",
+                "type": "object",
+                "example": {
+                    "scope": {
+                        "facetFilters": [
+                            {
+                                "keys": [
+                                    "${header.customFields.fsType}"
+                                ],
+                                "facetKey": "FactSheetTypes",
+                                "operator": "${header.customFields.operator}"
+                            },
+                            {
+                                "keys": [
+                                    "1d063fa9-fa36-4988-a06e-412a4c5744f4"
+                                ],
+                                "facetKey": "Subscriptions",
+                                "operator": "OR"
+                            }
+                        ],
+                        "ids": [
+                            "${anotherJUEL}"
+                        ]
+                    },
+                    "expr": "${lx.factsheet.name == data.displayName}",
+                    "multipleMatchesAllowed": true,
+                    "scopeFromBookmark": "${data.bookmarkId}"
+                },
+                "properties": {
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "filter": {
+                        "description": "The JUEL expression to filter results from search scope. References to LDIF fields are allowed here",
+                        "example": "${lx.factsheet.name == data.displayName}",
+                        "readOnly": true
+                    },
+                    "multipleMatchesAllowed": {
+                        "description": "True is multiple matches are allowed for the target fact sheets to update. False if only one match is allowed",
+                        "example": "${lx.factsheet.name == data.displayName}",
+                        "readOnly": true,
+                        "default": "true"
+                    },
+                    "scopeFromBookmark": {
+                        "description": "String or JUEL expression that define bookmark that wil be used for selecting factsheets.",
+                        "example": "${data.bookmarkId}",
+                        "readOnly": true
+                    },
+                    "projectionScope": {
+                        "description": "The projection query request for obtaining projection PointOfViews, create this section as documented in projection endpoint (https://app.leanix.net/openapi-explorer/?urls.primaryName=Impacts). Every item from the PointOfViews response can be used in JUEL expressions by ${lx.projection}",
+                        "type": "object",
+                        "example": {
+                            "filters": [
+                                {
+                                    "type": "factSheetType",
+                                    "types": [
+                                        "ITComponent"
+                                    ]
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "id",
+                                    "type": "field",
+                                    "field": "id"
+                                },
+                                {
+                                    "name": "description",
+                                    "type": "field",
+                                    "field": "description"
+                                }
+                            ],
+                            "pointsOfView": [
+                                {
+                                    "id": "current",
+                                    "changeSet": {
+                                        "type": "dateOnly",
+                                        "date": "2020-02-21"
+                                    }
+                                }
+                            ]
+                        },
+                        "readOnly": true
+                    }
+                }
+            },
+            "ReadFactSheetSection": {
+                "description": "Define the components that will be available for JUEL expression under the symbol 'lx'.",
+                "type": "object",
+                "example": {
+                    "read": {
+                        "metrics": {}
+                    }
+                },
+                "properties": {
+                    "metrics": {
+                        "$ref": "#/components/schemas/MetricsMeasurement"
+                    },
+                    "fields": {
+                        "description": "A list of fields that are required to get from Fact Sheet",
+                        "example": [
+                            "name",
+                            "description",
+                            "location",
+                            "lifecycle"
+                        ],
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "relations": {
+                        "$ref": "#/components/schemas/RequiredRelationInfo"
+                    },
+                    "tags": {
+                        "$ref": "#/components/schemas/TagFilter"
+                    },
+                    "subscriptions": {
+                        "$ref": "#/components/schemas/SubscriptionFilter"
+                    },
+                    "documents": {
+                        "$ref": "#/components/schemas/DocumentFilter"
+                    },
+                    "impacts": {
+                        "$ref": "#/components/schemas/ImpactFilter"
+                    },
+                    "noNullForOrdinal": {
+                        "description": "A flag to determine the fallback response in the function lx.toOrdinal(...). A true (default if absent) makes the value returned by lx.toOrdinal(...) to be zero for non-found cases. False will make the returned value equals NULL.",
+                        "readOnly": true,
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "multipleFields": {
+                        "description": "An EL expression to describe which factSheet fields from the data model are selected",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500,
+                        "example": "${dm.factSheetField.name=='description' && dm.factSheetField.type=='STRING' && dm.factSheetType=='Application'}"
+                    }
+                }
+            },
+            "DocumentFilter": {
+                "type": "object",
+                "properties": {
+                    "filter": {
+                        "description": "The document names to filter for",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "ImpactFilter": {
+                "type": "object",
+                "properties": {
+                    "readAll": {
+                        "description": "A flag that specifies whether to read impacts belonging to Fact Sheet",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    }
+                }
+            },
+            "SubscriptionFilter": {
+                "type": "object",
+                "properties": {
+                    "types": {
+                        "description": "The subscription types to retrieve",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "TagFilter": {
+                "type": "object",
+                "properties": {
+                    "groups": {
+                        "description": "The tag groups to retrieve",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "multipleGroups": {
+                        "description": "Create list of tag group names by evaluating juel expression. It iterates all tagGroups in Workspace, tag group currently iterated over is available as “dm.tagGroup” in the JUEL expression, example: ${dm.tagGroup.name=='TagGroupsName'}",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "RequiredRelationInfo": {
+                "type": "object",
+                "properties": {
+                    "filter": {
+                        "description": "The relation types to filter for",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "fields": {
+                        "description": "The names of the fields of a relation that are be available",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "targetFields": {
+                        "description": "The names of the fields of the target Fact Sheet that are available",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "constrainingRelations": {
+                        "description": "Whether to get constraining relations of relations",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    },
+                    "multipleFields": {
+                        "description": "An EL expression to describe which relation fields from the data model are selected",
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 500,
+                        "example": "${dm.relationField.name=='description' && dm.relationField.type=='STRING' && dm.relationType=='relToParent'}"
+                    },
+                    "multipleFilters": {
+                        "description": "An EL expression to describe which relation type to filter for",
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 500,
+                        "example": "${dm.relationType=='relToParent'}"
+                    },
+                    "multipleTargetFields": {
+                        "description": "An EL expression to describe which factSheet fields on the target factSheet are selected",
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 500,
+                        "example": "${dm.factSheetField.name=='description' && dm.factSheetField.type=='STRING' && dm.relationType=='relToParent' && dm.factSheetType=='Application'}"
+                    }
+                }
+            },
+            "MetricsMeasurement": {
+                "description": "Specify multiple measurements that are fetched along with the processing Fact Sheet, it is possible to use juel expression in any of the values",
+                "type": "object",
+                "example": {
+                    "read": {
+                        "metrics": {}
+                    }
+                },
+                "properties": {
+                    "name": {
+                        "description": "The name to be used for this measurement in the context of 'lx.metrics.<name>'.",
+                        "type": "string"
+                    },
+                    "measurement": {
+                        "description": "The name of the measurement as it is known in the workspace.",
+                        "type": "string"
+                    },
+                    "fieldName": {
+                        "description": "The name of the field that belongs to the measurement where the data will be collected.",
+                        "type": "string"
+                    },
+                    "groupBy": {
+                        "description": "Optional, grouping criteria, it is a time duration value, e.g. '1d'.",
+                        "type": "string"
+                    },
+                    "start": {
+                        "description": "Optional, start of the period of time to fetch data. If 'start' is defined, then at least 'end' or 'duration' must be also defined",
+                        "type": "string"
+                    },
+                    "end": {
+                        "description": "Optional, end of the period of time to fetch data, must be defined based on the 'start' field.",
+                        "type": "string"
+                    },
+                    "duration": {
+                        "description": "Optional, the duration expression (time interval) to express the period of time to fetch data. ISO-8601 duration format PnDTnHnMn is expected",
+                        "type": "string"
+                    },
+                    "rules": {
+                        "$ref": "#/components/schemas/MetricRules"
+                    }
+                }
+            },
+            "MetricRules": {
+                "description": "Specify the condition to collect data. Juel expression can be used in all corresponding values.",
+                "type": "object",
+                "example": {
+                    "read": {
+                        "key": "factSheetId",
+                        "comparator": "=",
+                        "compareWith": "${lx.factsheet.id}"
+                    }
+                },
+                "properties": {
+                    "key": {
+                        "description": "Identify the key for the rule",
+                        "type": "string"
+                    },
+                    "comparator": {
+                        "description": "Identify the operation that is used to compare values",
+                        "type": "string"
+                    },
+                    "compareWith": {
+                        "description": "The value used in the comparison operation",
+                        "type": "string"
+                    }
+                }
+            },
+            "FilterConfig": {
+                "description": "Defines a filter for the content data that this processor is able to evaluate",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "description": "The regular expression of the content type this filter config should accept",
+                        "example": "Deployment",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "id": {
+                        "description": "The regular expression of the content id this filter config should accept",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "onRead": {
+                        "description": "An EL expression to describe the onRead filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "updatedInDuration": {
+                        "description": "An EL expression to limit Fact Sheets that have changes during a given time window in the past. ISO-8601 duration format PnDTnHnMn is used",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "IdentifierSetTemplate": {
+                "description": "A template representing one or more identifiers of Fact Sheets",
+                "type": "object",
+                "properties": {
+                    "external": {
+                        "$ref": "#/components/schemas/ExternalIdSetTemplate"
+                    },
+                    "internal": {
+                        "description": "Internal identifiers of the Fact Sheet assigned by LeanIX",
+                        "example": "${data.ids}",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "IdentifierTemplate": {
+                "description": "A template representing a unique identifier of a Fact Sheet when evaluated",
+                "type": "object",
+                "properties": {
+                    "external": {
+                        "$ref": "#/components/schemas/ExternalIdTemplate"
+                    },
+                    "internal": {
+                        "description": "An internal identifier of the Fact Sheet assigned by LeanIX",
+                        "example": "${content.id}",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "IdentifierWithSearchScopeTemplate": {
+                "description": "A template representing the conditions for obtaining the fact sheets to been evaluated. Includes an identifier for internal, external Id, or a search criteria to obtain multiple fact sheets to evaluate",
+                "type": "object",
+                "properties": {
+                    "external": {
+                        "$ref": "#/components/schemas/ExternalIdTemplate"
+                    },
+                    "internal": {
+                        "description": "An internal identifier of the Fact Sheet assigned by LeanIX",
+                        "example": "${content.id}",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "search": {
+                        "$ref": "#/components/schemas/SearchScope"
+                    }
+                }
+            },
+            "DataConsumer": {
+                "required": [
+                    "type"
+                ],
+                "description": "Define the target location to which the outbound result LDIF should be uploaded to",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "description": "The type of data consumer (one of 'leanixStorage' or 'azureStorage').",
+                        "example": "Deployment",
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                },
+                "discriminator": {
+                    "propertyName": "type"
+                }
+            },
+            "LeanIxStorageDataConsumer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DataConsumer"
+                    }
+                ],
+                "description": "Upload the outbound result LDFI to the default cloud storage provided by LeanIX",
+                "type": "object"
+            },
+            "AzureStorageDataConsumer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DataConsumer"
+                    }
+                ],
+                "required": [
+                    "connectionString",
+                    "containerName"
+                ],
+                "description": "Upload the outbound result LDFI to the target Azure storage account and container",
+                "type": "object",
+                "properties": {
+                    "connectionString": {
+                        "description": "The connection string to the target Azure storage account.",
+                        "type": "string"
+                    },
+                    "containerName": {
+                        "description": "The container name to which the outbound result should be uploaded to.",
+                        "type": "string"
+                    }
+                }
+            },
+            "ImpactInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "identifier"
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified fact sheet",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            },
+                            "read": {
+                                "$ref": "#/components/schemas/ReadFactSheetSection"
+                            }
+                        }
+                    }
+                ]
+            },
+            "InboundProcessor": {
+                "type": "object",
+                "discriminator": {
+                    "propertyName": "processorType"
+                },
+                "required": [
+                    "processorType"
+                ],
+                "properties": {
+                    "processorType": {
+                        "description": "The type that identifies this processor (one of 'inboundFactSheet', 'inboundRelation', 'inboundTag', 'inboundDocument', 'inboundSubscription', 'inboundMetrics', 'inboundImpact', 'variableProcessor')",
+                        "example": "inboundFactSheet",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "processorName": {
+                        "description": "A not necessarily unique name for this processor",
+                        "example": "FactSheetCreator",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "processorDescription": {
+                        "description": "A description for this processor",
+                        "example": "Creates Fact Sheets in LeanIX",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "filter": {
+                        "$ref": "#/components/schemas/FilterConfig"
+                    },
+                    "run": {
+                        "description": "Order of processor execution. Processors with high numbers are executed after such processors with low number. A value greater or equal 0 is expected for this value",
+                        "type": "integer",
+                        "format": "int32",
+                        "readOnly": true,
+                        "minimum": 0
+                    },
+                    "enabled": {
+                        "description": "Whether this processor is executed or not. Default is true.",
+                        "type": "boolean",
+                        "readOnly": true
+                    },
+                    "allowManyIterations": {
+                        "description": "When false, it produces warnings if forEach option is used and filter is not defined, also checks in a similar way the combined use of Search scope and forEach depending of the type of Inbound processor. If set to true, no warnings are generated",
+                        "type": "boolean",
+                        "readOnly": true,
+                        "default": false
+                    },
+                    "forEach": {
+                        "description": "An EL expression which targets a content property with a list. Processing will be done for each element in the list.",
+                        "example": "${data.documents}",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "variables": {
+                        "description": "A list of variables. Each variable consists of a key and a value. Both fields can contain EL expressions. The expression in key must be evaluated to a single element while the expression in value will be evaluated to a list. The EL expressions are evaluated after a processor has run for a data object and the values will be provided in the next run of the running synchronization.",
+                        "example": {
+                            "example": [
+                                {
+                                    "key": "${data.key}",
+                                    "value": "${data.tags}"
+                                },
+                                {
+                                    "key": "var2",
+                                    "value": "${content.id}"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/VariableKeyValueTemplate"
+                        }
+                    },
+                    "mode": {
+                        "description": "The operation mode of this processor. It can be either 'delete', or 'createOrUpdate'.",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "logLevel": {
+                        "description": "The log level of this processor. It can be 'off', 'warning' or 'debug'.",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "InboundProcessorConfiguration": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ProcessorConfiguration"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "connectorType",
+                            "connectorId",
+                            "connectorVersion",
+                            "processingDirection"
+                        ],
+                        "properties": {
+                            "connectorType": {
+                                "description": "The type of connector that is used",
+                                "example": "lxKubernetes",
+                                "type": "string"
+                            },
+                            "connectorId": {
+                                "description": "The identifier of the connector instance",
+                                "example": "Kub Dev-001",
+                                "type": "string"
+                            },
+                            "connectorVersion": {
+                                "description": "The version of the connector that is expected to process this LDIF file",
+                                "example": "1.2.0",
+                                "type": "string"
+                            },
+                            "processingDirection": {
+                                "description": "The data flow direction, must be [inbound]",
+                                "type": "string",
+                                "default": "inbound",
+                                "enum": [
+                                    "inbound"
+                                ]
+                            },
+                            "processingMode": {
+                                "description": "The processing mode, could be [partial, full]",
+                                "type": "string",
+                                "default": "partial",
+                                "enum": [
+                                    "partial",
+                                    "full"
+                                ]
+                            },
+                            "processors": {
+                                "description": "The list of processors used to evaluate the LDIF data",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/InboundProcessor"
+                                }
+                            },
+                            "deletionScope": {
+                                "description": "The deletion scope definition used to delete untouched entities on a 'full' sync mode",
+                                "type": "object",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/DeletionScope"
+                                }
+                            },
+                            "variables": {
+                                "description": "The global variable definition used to define default values",
+                                "type": "object",
+                                "readOnly": true,
+                                "additionalProperties": {
+                                    "type": "object"
+                                }
+                            },
+                            "dataProvider": {
+                                "description": "Definition of the provider which provides the inbound LDIF.",
+                                "type": "object",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/DataProvider"
+                                }
+                            },
+                            "credentials": {
+                                "description": "Credentials setting for the synchronization run.",
+                                "type": "object",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/Credentials"
+                                }
+                            },
+                            "targetLdif": {
+                                "$ref": "#/components/schemas/TargetLdifConfiguration"
+                            },
+                            "defaultInput": {
+                                "description": "The default LDIF for testing with this processor configuration.",
+                                "type": "object",
+                                "items": {
+                                    "$ref": "#/components/schemas/LeanIxDataInterchangeFormat"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "StorageManagerResponse": {
+                "type": "object",
+                "required": [
+                    "expireAt",
+                    "SAS"
+                ],
+                "properties": {
+                    "expireAt": {
+                        "description": "The date until the SAS url for the new blob file is valid.",
+                        "example": "2021-04-10T13:08:53.939604Z",
+                        "type": "string"
+                    },
+                    "SAS": {
+                        "description": "The Shared Accesss Signature (SAS)",
+                        "example": "https://folder.blob.core.windows.net/integration-api/Pa840823",
+                        "type": "string"
+                    }
+                }
+            },
+            "Input": {
+                "type": "object",
+                "discriminator": {
+                    "propertyName": "processingDirection"
+                },
+                "required": [
+                    "connectorType",
+                    "connectorId",
+                    "connectorVersion",
+                    "processingDirection"
+                ],
+                "properties": {
+                    "connectorType": {
+                        "description": "The type of connector that is used",
+                        "example": "lxKubernetes",
+                        "type": "string"
+                    },
+                    "connectorId": {
+                        "description": "The identifier of the connector instance",
+                        "example": "Kub Dev-001",
+                        "type": "string"
+                    },
+                    "connectorVersion": {
+                        "description": "The version of the connector that is expected to process this LDIF file",
+                        "example": "1.2.0",
+                        "type": "string"
+                    },
+                    "processingDirection": {
+                        "description": "The data flow direction, could be [inbound, outbound]",
+                        "type": "string",
+                        "example": "inbound",
+                        "enum": [
+                            "inbound",
+                            "outbound"
+                        ]
+                    },
+                    "processingMode": {
+                        "description": "The processing mode, could be [partial, full]",
+                        "type": "string",
+                        "default": "partial",
+                        "enum": [
+                            "partial",
+                            "full"
+                        ]
+                    }
+                }
+            },
+            "InputWithProcessorConfig": {
+                "type": "object",
+                "required": [
+                    "input",
+                    "processorConfiguration"
+                ],
+                "properties": {
+                    "input": {
+                        "$ref": "#/components/schemas/Input"
+                    },
+                    "processorConfiguration": {
+                        "$ref": "#/components/schemas/ProcessorConfiguration"
+                    }
+                }
+            },
+            "SyncRunInboundProgressReport": {
+                "type": "object",
+                "properties": {
+                    "processedContentCount": {
+                        "description": "Number of elements processed from content in the current run level for Inbound processing.",
+                        "type": "integer",
+                        "example": 4872
+                    },
+                    "errorCount": {
+                        "description": "Number of errors in the current run level, valid for Inbound",
+                        "type": "integer"
+                    },
+                    "graphQLRequestCount": {
+                        "description": "Number of GraphQL request made to Pathfinder backend in the current run level, not applicable for Outbound",
+                        "type": "integer"
+                    },
+                    "runLevelIndex": {
+                        "description": "Identifier of the run level being executed, valid only for Inbound processing.",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "status": {
+                        "description": "Status of the synchronization Job",
+                        "type": "integer",
+                        "example": "IN_PROGRESS"
+                    },
+                    "contentsCount": {
+                        "description": "Number of elements build in the output content. Valid for Outbound",
+                        "type": "integer"
+                    },
+                    "warningsCount": {
+                        "description": "Number of warnings detected during Outbound processing",
+                        "type": "integer"
+                    },
+                    "itemsInScopeCount": {
+                        "description": "Number of elements found in the Outbound Scope or the Scope of the processors",
+                        "type": "integer"
+                    }
+                }
+            },
+            "KeyTemplate": {
+                "type": "object",
+                "required": [
+                    "expr"
+                ],
+                "properties": {
+                    "expr": {
+                        "description": "The basic expression that is evaluated by the EL based on the content data",
+                        "example": "description",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "regexReplace": {
+                        "$ref": "#/components/schemas/RegexReplace"
+                    }
+                }
+            },
+            "KeyValueTemplate": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "value"
+                ],
+                "properties": {
+                    "key": {
+                        "description": "The basic expression of key",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "value": {
+                        "description": "The basic expression of value",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "LeanIxDataInterchangeFormat": {
+                "description": "Represents a LeanIX Data Interchange Format (LDIF)",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Input"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "connectorType",
+                            "connectorId",
+                            "connectorVersion",
+                            "lxVersion",
+                            "processingDirection"
+                        ],
+                        "properties": {
+                            "connectorType": {
+                                "description": "The type of connector that is used",
+                                "example": "lxKubernetes",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "connectorId": {
+                                "description": "The identifier of the connector instance",
+                                "example": "Kub Dev-001",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "connectorVersion": {
+                                "description": "The version of the connector that is expected to process this LDIF file",
+                                "example": "1.2.0",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "lxVersion": {
+                                "description": "The target API version",
+                                "example": "1.0.0",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "lxWorkspace": {
+                                "description": "The optional target workspace",
+                                "type": "string",
+                                "readOnly": true
+                            },
+                            "description": {
+                                "description": "A customer added, arbitrary description for any kind of grouping, notification or note purpose",
+                                "example": "Imports kubernetes data into LeanIX",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "processingDirection": {
+                                "description": "The direction of the data flow",
+                                "type": "string",
+                                "default": "inbound",
+                                "readOnly": true,
+                                "enum": [
+                                    "inbound"
+                                ]
+                            },
+                            "processingMode": {
+                                "description": "Optional additional options to parse this LDIF request",
+                                "type": "string",
+                                "default": "partial",
+                                "readOnly": true,
+                                "enum": [
+                                    "partial",
+                                    "full"
+                                ]
+                            },
+                            "chunkInformation": {
+                                "$ref": "#/components/schemas/ChunkInformation"
+                            },
+                            "customFields": {
+                                "description": "Global variables accessible from all data processors.",
+                                "type": "object",
+                                "readOnly": true,
+                                "additionalProperties": {
+                                    "type": "object"
+                                }
+                            },
+                            "content": {
+                                "description": "The list of content changes that are applied within this LDIF",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/Content"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "MetricsInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "updates": {
+                                "description": "A set of values that specify the metrics point that is created.",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "TodoInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "updates": {
+                                "description": "A set of values that specify the ToDo payload request",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "OutboundFieldTemplate": {
+                "type": "object",
+                "required": [
+                    "key"
+                ],
+                "properties": {
+                    "key": {
+                        "$ref": "#/components/schemas/KeyTemplate"
+                    },
+                    "mode": {
+                        "description": "Either 'list' or 'selectFirst'. Defines if the field should be written as a list or as a single element.",
+                        "default": "selectFirst",
+                        "example": "selectFirst",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "values": {
+                        "description": "A list of expressions for multiple values, e.g. for multi select fields",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/ValueTemplate"
+                        }
+                    },
+                    "forEach": {
+                        "$ref": "#/components/schemas/ValueForEachTemplate"
+                    },
+                    "optional": {
+                        "description": "Whether this value is optional. If true, then missing value error will not be reported",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    }
+                }
+            },
+            "OutboundInput": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Input"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "connectorType",
+                            "connectorId",
+                            "connectorVersion",
+                            "processingDirection"
+                        ],
+                        "properties": {
+                            "connectorType": {
+                                "description": "The type of connector that is used",
+                                "example": "lxKubernetes",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "connectorId": {
+                                "description": "The identifier of the connector instance",
+                                "example": "Kub Dev-001",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "connectorVersion": {
+                                "description": "The version of the connector that is expected to process this LDIF file",
+                                "example": "1.2.0",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "processingDirection": {
+                                "description": "The direction of the data flow.",
+                                "type": "string",
+                                "default": "outbound",
+                                "readOnly": true,
+                                "enum": [
+                                    "outbound"
+                                ]
+                            },
+                            "processingMode": {
+                                "description": "Optional additional options to parse this LDIF request",
+                                "type": "string",
+                                "default": "partial",
+                                "readOnly": true,
+                                "enum": [
+                                    "partial"
+                                ]
+                            },
+                            "description": {
+                                "description": "A customer added, arbitrary description for any kind of grouping, notification or note purpose",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            }
+                        }
+                    }
+                ]
+            },
+            "OutboundProcessor": {
+                "type": "object",
+                "required": [
+                    "processorType"
+                ],
+                "properties": {
+                    "processorType": {
+                        "description": "The type that identifies this processor ('outboundFactSheet')",
+                        "example": "outboundFactSheet",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "processorName": {
+                        "description": "A not necessarily unique name for this processor",
+                        "example": "OutputProcessor_Application_FactSheets",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "processorDescription": {
+                        "description": "A description for this processor",
+                        "example": "Reads 'Application' Fact Sheet data from LeanIX and transforms it into an arbitrary output format.",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "filter": {
+                        "$ref": "#/components/schemas/FilterConfig"
+                    },
+                    "enabled": {
+                        "description": "Whether this processor is executed or not. Default is true.",
+                        "type": "boolean",
+                        "readOnly": true
+                    },
+                    "scope": {
+                        "description": "A list of facet filters which limit which Fact Sheets are considered for output",
+                        "example": [
+                            {
+                                "facetKey": "FactSheetTypes",
+                                "operator": "OR",
+                                "keys": [
+                                    "Application"
+                                ]
+                            }
+                        ],
+                        "type": "object",
+                        "readOnly": true,
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    },
+                    "fields": {
+                        "description": "A list of fields that are required to get from Fact Sheet",
+                        "example": [
+                            "name",
+                            "description",
+                            "location",
+                            "lifecycle"
+                        ],
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "relations": {
+                        "$ref": "#/components/schemas/OutboundRequiredRelationInfo"
+                    },
+                    "tags": {
+                        "$ref": "#/components/schemas/OutboundTagFilter"
+                    },
+                    "subscriptions": {
+                        "$ref": "#/components/schemas/OutboundSubscriptionFilter"
+                    },
+                    "documents": {
+                        "$ref": "#/components/schemas/OutboundDocumentFilter"
+                    },
+                    "dataConsumer": {
+                        "$ref": "#/components/schemas/DataConsumer"
+                    },
+                    "metrics": {
+                        "$ref": "#/components/schemas/MetricsMeasurement"
+                    },
+                    "output": {
+                        "description": "A list of fields that are constructed an exported Fact Sheet",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/OutboundFieldTemplate"
+                        }
+                    },
+                    "noNullForOrdinal": {
+                        "description": "A flag to determine the fallback response in the function lx.toOrdinal(...). A true (default if absent) makes the value returned by lx.toOrdinal(...) to be zero for non-found cases. False will make the returned value equals NULL.",
+                        "readOnly": true,
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "multipleFields": {
+                        "description": "An EL expression to describe which factSheet fields from the data model are selected",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500,
+                        "example": "${dm.factSheetField.name=='description' && dm.factSheetField.type=='STRING' && dm.factSheetType=='Application'}"
+                    }
+                }
+            },
+            "OutboundProcessorConfiguration": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ProcessorConfiguration"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "connectorType",
+                            "connectorId",
+                            "connectorVersion",
+                            "processingDirection",
+                            "scope"
+                        ],
+                        "properties": {
+                            "connectorType": {
+                                "description": "The type of connector that is used",
+                                "example": "lxKubernetes",
+                                "type": "string"
+                            },
+                            "connectorId": {
+                                "description": "The identifier of the connector instance",
+                                "example": "Kub Dev-001",
+                                "type": "string"
+                            },
+                            "connectorVersion": {
+                                "description": "The version of the connector that is expected to process this LDIF file",
+                                "example": "1.2.0",
+                                "type": "string"
+                            },
+                            "processingDirection": {
+                                "description": "The data flow direction, must be [outbound]",
+                                "type": "string",
+                                "default": "outbound",
+                                "enum": [
+                                    "outbound"
+                                ]
+                            },
+                            "processingMode": {
+                                "description": "The processing mode, could be [partial]",
+                                "type": "string",
+                                "default": "partial",
+                                "enum": [
+                                    "partial"
+                                ]
+                            },
+                            "scope": {
+                                "description": "A list of facet filters to limit which Fact Sheets are considered for output",
+                                "example": [
+                                    {
+                                        "facetKey": "FactSheetTypes",
+                                        "operator": "OR",
+                                        "keys": [
+                                            "Application"
+                                        ]
+                                    }
+                                ],
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "object"
+                                }
+                            },
+                            "processors": {
+                                "description": "The list of processors used to evaluate the LDIF data",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/OutboundProcessor"
+                                }
+                            },
+                            "dataConsumer": {
+                                "$ref": "#/components/schemas/DataConsumer"
+                            },
+                            "defaultInput": {
+                                "description": "The default outbound input for testing with this processor configuration.",
+                                "type": "object",
+                                "items": {
+                                    "$ref": "#/components/schemas/OutboundInput"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "OutboundRequiredRelationInfo": {
+                "type": "object",
+                "properties": {
+                    "filter": {
+                        "description": "The relation types to filter for",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "fields": {
+                        "description": "The names of the fields of a relation that are be available",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "targetFields": {
+                        "description": "The names of the fields of the target Fact Sheet that are available",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "constrainingRelations": {
+                        "description": "Whether to get constraining relations of relations",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    }
+                }
+            },
+            "OutboundTagFilter": {
+                "type": "object",
+                "properties": {
+                    "groups": {
+                        "description": "The tag groups to retrieve",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "OutboundSubscriptionFilter": {
+                "type": "object",
+                "properties": {
+                    "types": {
+                        "description": "The subscription types to retrieve",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "OutboundDocumentFilter": {
+                "type": "object",
+                "properties": {
+                    "filter": {
+                        "description": "The document names to filter for",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "PatchTemplate": {
+                "description": "The template of a key/value pair that defines an abstract change to the data",
+                "example": {
+                    "key": {
+                        "expr": "description",
+                        "regexReplace": {
+                            "match": "^(.*)$",
+                            "replace": "$1"
+                        }
+                    },
+                    "values": [
+                        {
+                            "expr": "${data.name}, ${data.release}",
+                            "regexReplace": {
+                                "match": "^(.*)$",
+                                "replace": "$1"
+                            }
+                        }
+                    ]
+                },
+                "type": "object",
+                "required": [
+                    "key",
+                    "values"
+                ],
+                "properties": {
+                    "key": {
+                        "$ref": "#/components/schemas/KeyTemplate"
+                    },
+                    "op": {
+                        "description": "Defines the operation that is used. Data can be added or updated",
+                        "default": "replace",
+                        "example": "replace",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "values": {
+                        "description": "A list of expressions for multiple values, e.g. for multi select fields",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/ValueTemplate"
+                        }
+                    },
+                    "optional": {
+                        "description": "Whether this value is optional. If true, then missing value error will not be reported",
+                        "type": "boolean",
+                        "default": false,
+                        "readOnly": true
+                    },
+                    "forEach": {
+                        "$ref": "#/components/schemas/ValueForEachTemplate"
+                    }
+                }
+            },
+            "ProcessorConfiguration": {
+                "type": "object",
+                "discriminator": {
+                    "propertyName": "processingDirection"
+                },
+                "required": [
+                    "connectorType",
+                    "connectorId",
+                    "connectorVersion",
+                    "processingDirection"
+                ],
+                "properties": {
+                    "connectorType": {
+                        "description": "The type of connector that is used",
+                        "example": "lxKubernetes",
+                        "type": "string"
+                    },
+                    "connectorId": {
+                        "description": "The identifier of the connector instance",
+                        "example": "Kub Dev-001",
+                        "type": "string"
+                    },
+                    "connectorVersion": {
+                        "description": "The version of the connector that is expected to process this LDIF file",
+                        "example": "1.2.0",
+                        "type": "string"
+                    },
+                    "processingDirection": {
+                        "description": "The data flow direction, could be [inbound, outbound]",
+                        "type": "string",
+                        "example": "inbound",
+                        "enum": [
+                            "inbound",
+                            "outbound"
+                        ]
+                    },
+                    "processingMode": {
+                        "description": "The processing mode, could be [partial, full]",
+                        "type": "string",
+                        "default": "partial",
+                        "enum": [
+                            "partial",
+                            "full"
+                        ]
+                    },
+                    "sequentialExecution": {
+                        "description": "When set to true, all synchronizations runs processed by this processor configuration will be executed sequentially instead of in parallel.",
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "RegexReplace": {
+                "description": "The combination of a matching and a replacement pattern. The default matching pattern selects the whole string in group 1, while the default replace pattern replaces the matches with group 1",
+                "type": "object",
+                "properties": {
+                    "match": {
+                        "description": "The matching pattern",
+                        "default": "^(.*)$",
+                        "example": "^(.*)$",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "replace": {
+                        "description": "The replacement pattern",
+                        "default": "$1",
+                        "example": "$1",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "RelationInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "from",
+                            "to",
+                            "type"
+                        ],
+                        "properties": {
+                            "type": {
+                                "description": "The relation type",
+                                "example": "relApplicationToITComponent",
+                                "type": "string",
+                                "readOnly": true,
+                                "minLength": 0,
+                                "maxLength": 500
+                            },
+                            "from": {
+                                "$ref": "#/components/schemas/IdentifierTemplate"
+                            },
+                            "to": {
+                                "$ref": "#/components/schemas/IdentifierTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified relation",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            },
+                            "read": {
+                                "description": "Multiple components to be read for factsheet in from section and made available as part of the Juel evaluation context. They are referenced under the symbol 'lx'",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ReadFactSheetSection"
+                                }
+                            },
+                            "optional": {
+                                "description": "Make warnings just informative messages when any of the factsheets in the relation (from or to sides) does not exist. By default is False ",
+                                "type": "boolean",
+                                "default": false
+                            }
+                        }
+                    }
+                ]
+            },
+            "RelationDeletionScope": {
+                "description": "The criteria for selection of relations.",
+                "type": "object",
+                "properties": {
+                    "relationTypes": {
+                        "description": "A list of relation types like 'relToParent', 'relToChild'",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "read": {
+                        "$ref": "#/components/schemas/ReadFactSheetSection"
+                    }
+                }
+            },
+            "Scope": {
+                "description": "The criteria for selection of entities. In case you use facetFilters inside, it is possible to use Juel expressions inside 'keys', for example: ${customFields.factSheetType}",
+                "type": "object",
+                "example": {
+                    "ids": [],
+                    "facetFilters": [
+                        {
+                            "keys": [
+                                "UserGroup"
+                            ],
+                            "facetKey": "FactSheetTypes",
+                            "operator": "OR"
+                        }
+                    ]
+                }
+            },
+            "TodoFilterObject": {
+                "description": "Query definition to determine the scope, see TodoQueryBody in To-Do Open Api documentation https://app.leanix.net/openapi-explorer?urls.primaryName=To-do",
+                "type": "object",
+                "example": {
+                    "todoIds": [
+                        "b3e18f4b-3175-47ae-bb18-0c14bfb631a6",
+                        "2fc4c81e-9d45-4bfe-8020-a35679407a80"
+                    ],
+                    "externalIds": [],
+                    "states": [
+                        "PREPARED"
+                    ]
+                }
+            },
+            "FactSheetOwnerDeletion": {
+                "description": "Defines the factSheet field that controls the deletion, which will be done only if the value represents an empty list",
+                "type": "object",
+                "properties": {
+                    "fieldName": {
+                        "description": "The name of the factSheet field that keep the list of owners for a factSheet",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "ownerId": {
+                        "description": "The value that represents ownership for factSheets, if this value is found in fieldName, it will be removed",
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "StatusResponse": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The ID of the synchronization run",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "The status of the synchronization run",
+                        "type": "string",
+                        "readOnly": true,
+                        "enum": [
+                            "CREATED",
+                            "SEQUENTIALIZED",
+                            "PENDING",
+                            "IN_PROGRESS",
+                            "FINISHED",
+                            "STOPPED",
+                            "FAILED"
+                        ]
+                    },
+                    "description": {
+                        "description": "The optional description that was provided as part of the Input object.",
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "description": "Error response with details in a list",
+                "required": [
+                    "errors"
+                ],
+                "properties": {
+                    "errors": {
+                        "description": "A list of error details",
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "UrlContainer": {
+                "type": "object",
+                "description": "Represent a container for the Url where the results can be downloaded.",
+                "required": [
+                    "url"
+                ],
+                "properties": {
+                    "url": {
+                        "description": "URL for the content generated by a Synchronisation Run",
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "SubscriptionInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "identifier"
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified subscription",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "SubscriptionScopes": {
+                "description": "The criteria to select subscriptions",
+                "type": "object",
+                "properties": {
+                    "roles": {
+                        "description": "List of role names",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "description": "Type of role, like RESPONSIBLE",
+                        "type": "string"
+                    }
+                }
+            },
+            "SubscriptionDeletionScope": {
+                "description": "The criteria to select subscriptions",
+                "type": "object",
+                "properties": {
+                    "subscriptionScopes": {
+                        "description": "The combinations of type and roles for subscriptions",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SubscriptionScopes"
+                        }
+                    },
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "FactSheetDeletionScope": {
+                "description": "The criteria to select fact sheets and activate the deletion.",
+                "type": "object",
+                "properties": {
+                    "owner": {
+                        "$ref": "#/components/schemas/FactSheetOwnerDeletion"
+                    },
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "read": {
+                        "$ref": "#/components/schemas/ReadFactSheetSection"
+                    }
+                }
+            },
+            "ImpactDeletionScope": {
+                "description": "The criteria to select impacts for deletion",
+                "type": "object",
+                "properties": {
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "TodoDeletionScope": {
+                "description": "The criteria to select To-dos for deletion",
+                "type": "object",
+                "properties": {
+                    "filterObject": {
+                        "$ref": "#/components/schemas/TodoFilterObject"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings. Use 'lx.todo.*' as reference to To-do object obtained by filterObject",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "MaximumDeletionRatio": {
+                "description": "The ratio limits for each type of deletion scope",
+                "type": "object",
+                "properties": {
+                    "factSheets": {
+                        "description": "The maximum ratio for deletion in fact sheets",
+                        "type": "integer"
+                    },
+                    "subscriptions": {
+                        "description": "The maximum ratio for deletion in subscriptions",
+                        "type": "integer"
+                    },
+                    "documents": {
+                        "description": "The maximum ratio for deletion in documents",
+                        "type": "integer"
+                    },
+                    "relations": {
+                        "description": "The maximum ratio for deletion in relations",
+                        "type": "integer"
+                    },
+                    "tags": {
+                        "description": "The maximum ratio for deletion in tags",
+                        "type": "integer"
+                    }
+                }
+            },
+            "SynchronizationRun": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "A unique ID to distinguish this LDIF instance from other LDIF instances",
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "InboundContentProcessingResult": {
+                "type": "object",
+                "properties": {
+                    "processor": {
+                        "$ref": "#/components/schemas/Processor"
+                    },
+                    "errors": {
+                        "description": "A list of error/warnings messages found during the execution.",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/Warning"
+                        }
+                    },
+                    "content": {
+                        "$ref": "#/components/schemas/Content"
+                    },
+                    "integration": {
+                        "description": "Integration context map",
+                        "type": "object",
+                        "readOnly": true,
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    },
+                    "requests": {
+                        "description": "The list of Graphql requests that were executed during the processing",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/GraphQLInfo"
+                        }
+                    }
+                }
+            },
+            "InboundDebugVariables": {
+                "type": "object",
+                "properties": {
+                    "processor": {
+                        "$ref": "#/components/schemas/Processor"
+                    },
+                    "variables": {
+                        "$ref": "#/components/schemas/VariableDebugInfo"
+                    }
+                }
+            },
+            "VariableDebugInfo": {
+                "type": "object",
+                "properties": {
+                    "size": {
+                        "description": "The number of variables in the debug context",
+                        "readOnly": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "values": {
+                        "description": "List of debug values",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "FastRunResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "description": "The status result of the run, like FINISHED, FAILED.",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "warnings": {
+                        "description": "A list of error/warnings messages found during the execution.",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/Warning"
+                        }
+                    },
+                    "stats": {
+                        "$ref": "#/components/schemas/FastRunStatsReport"
+                    },
+                    "results": {
+                        "description": "Output ldif when writeToLdif processor is used.",
+                        "readOnly": true,
+                        "type": "object"
+                    }
+                }
+            },
+            "Warning": {
+                "type": "object",
+                "properties": {
+                    "processor": {
+                        "$ref": "#/components/schemas/Processor"
+                    },
+                    "content": {
+                        "description": "The content ID element from the LDIF that was processed when this warning was generated.",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "message": {
+                        "description": "The error message",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "detail": {
+                        "description": "Additional information to complement the error message",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "category": {
+                        "description": "An internal category that identifies of processing category where the warning was originated.",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "An identifier of the type of alert. Possible values are WARNING, ERROR",
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "GraphQLInfo": {
+                "type": "object",
+                "properties": {
+                    "requests": {
+                        "$ref": "#/components/schemas/GraphQLRequest"
+                    },
+                    "result": {
+                        "description": "Graphql results",
+                        "type": "object",
+                        "readOnly": true,
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "GraphQLRequest": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "description": "The query of the graphql request",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "variables": {
+                        "description": "Variables for the Graphql request",
+                        "type": "object",
+                        "readOnly": true,
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "Processor": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "The name of the processor as defined by the processor configuration",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "index": {
+                        "description": "An internal integer value used to identify the processor",
+                        "readOnly": true,
+                        "type": "integer"
+                    }
+                }
+            },
+            "FastRunStatsReport": {
+                "type": "object",
+                "properties": {
+                    "duration": {
+                        "description": "The duration of the execution expressed in ISO-8601 format PnDTnHnMn",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "processedContentCount": {
+                        "description": "The number of elements processed as given by the LDIF input content",
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "processorCount": {
+                        "description": "The number or processors that were part of the execution",
+                        "readOnly": true,
+                        "type": "integer"
+                    }
+                }
+            },
+            "SynchronizationRunWithConfiguration": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "A unique ID to distinguish this LDIF instance from other LDIF instances",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "processorConfiguration": {
+                        "$ref": "#/components/schemas/ProcessorConfiguration"
+                    }
+                }
+            },
+            "TagDeletionScope": {
+                "description": "The criteria for selection of tags.",
+                "type": "object",
+                "properties": {
+                    "tagScopes": {
+                        "description": "A list of tag and tag group combinations.",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/TagScope"
+                        }
+                    },
+                    "scope": {
+                        "$ref": "#/components/schemas/Scope"
+                    },
+                    "advanced": {
+                        "description": "An EL expression to describe the advanced filter settings.",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "read": {
+                        "$ref": "#/components/schemas/ReadFactSheetSection"
+                    }
+                }
+            },
+            "TagInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "factSheets": {
+                                "$ref": "#/components/schemas/IdentifierSetTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified tag",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/PatchTemplate"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "TagScope": {
+                "description": "A combination of tag and tag group.",
+                "type": "object",
+                "properties": {
+                    "group": {
+                        "description": "The group name or the regular expression pattern ",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "tag": {
+                        "description": "The tag name or the regular expression pattern ",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "TargetLdifConfiguration": {
+                "description": "Configuration for the created LDIF, in case 'writeToLdif' is used",
+                "type": "object",
+                "properties": {
+                    "ldifKeys": {
+                        "description": "A list of key-value pairs that evaluates to be the keys of the new LDIF",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/KeyValueTemplate"
+                        }
+                    },
+                    "dataConsumer": {
+                        "$ref": "#/components/schemas/DataConsumer"
+                    }
+                }
+            },
+            "ValueForEachTemplate": {
+                "description": "An object that contains information about how the value should be expanded according to a list field",
+                "type": "object",
+                "properties": {
+                    "elementOf": {
+                        "description": "The JUEL expressing targeting a list",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "filter": {
+                        "description": "The filter to apply to each element",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "ValueTemplate": {
+                "description": "A value template describes the mapping from an incoming object to a single value or a json object",
+                "type": "object",
+                "properties": {
+                    "expr": {
+                        "description": "An EL expression that evaluates to a single value. Use 'map' to evaluate to whole json object",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "regexMatch": {
+                        "description": "If this regex does not match on the evaluated 'expr' then this value template is ignored. Can not be used with 'map'",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "regexReplace": {
+                        "$ref": "#/components/schemas/RegexReplace"
+                    },
+                    "map": {
+                        "description": "A list of key-value pairs that evaluates to a json object. Use 'expr' to evaluate to a single value",
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/KeyValueTemplate"
+                        }
+                    },
+                    "forEach": {
+                        "$ref": "#/components/schemas/ValueForEachTemplate"
+                    },
+                    "object": {
+                        "description": "An EL expression that evaluates to an arbitrary data object.",
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "VariableInboundProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {}
+                    }
+                ]
+            },
+            "VariableKeyValueTemplate": {
+                "type": "object",
+                "required": [
+                    "key",
+                    "value"
+                ],
+                "properties": {
+                    "key": {
+                        "description": "The basic expression of key",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    },
+                    "value": {
+                        "description": "The basic expression of value",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 0,
+                        "maxLength": 500
+                    }
+                }
+            },
+            "WriteToLdifProcessor": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InboundProcessor"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "identifier": {
+                                "$ref": "#/components/schemas/IdentifierWithSearchScopeTemplate"
+                            },
+                            "updates": {
+                                "description": "A list of changes that are performed to the specified fact sheet",
+                                "type": "array",
+                                "readOnly": true,
+                                "items": {
+                                    "$ref": "#/components/schemas/OutboundFieldTemplate"
+                                }
+                            },
+                            "read": {
+                                "$ref": "#/components/schemas/ReadFactSheetSection"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

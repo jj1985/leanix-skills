@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: eol-it-components-report-and-tagging
+expected_outcome: |
+  eol_report.py authenticates with the token exchange and pages (first/after, pageInfo) through IT
+  Components, finds those whose endOfLife lifecycle phase starts within the next 12 months (or
+  already started), follows the relation to dependent Applications through an inline fragment, and
+  reads each Application's RESPONSIBLE subscription into a CSV with the person's name and email.
+  Behind a flag it tags only Applications that depend on components already past end of life: it
+  resolves the id of "EOL Risk" in group "Risk" via allTags/allTagGroups and calls updateFactSheet
+  with an add patch on /tags whose value is a JSON string of [{"tagId": ...}], dry-running with
+  validateOnly first. It checks the GraphQL errors array. NOTES.md lists the operations and states
+  Viewer for the report and Member (or Admin) for tagging.

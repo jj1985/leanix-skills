@@ -1,0 +1,273 @@
+---
+openapi: 3.1.0
+tags:
+- name: Exports
+  description: Manage export jobs
+components:
+  securitySchemes:
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /services/mtm/v1/oauth2/token
+  schemas:
+    Actor:
+      type: object
+      properties:
+        id:
+          anyOf:
+          - $ref: "#/components/schemas/UUID"
+          - type: "null"
+        displayName:
+          type:
+          - string
+          - "null"
+    Artifact:
+      type: object
+      properties:
+        type:
+          anyOf:
+          - $ref: "#/components/schemas/ImportExportFormat"
+          - type: "null"
+        href:
+          type:
+          - string
+          - "null"
+    ExportListResponse:
+      type: object
+      properties:
+        exports:
+          type:
+          - array
+          - "null"
+          items:
+            $ref: "#/components/schemas/ExportResponse"
+        _metadata:
+          anyOf:
+          - $ref: "#/components/schemas/Metadata"
+          - type: "null"
+    ExportRequest:
+      type: object
+      required:
+      - sourceType
+      - sourceIdentifier
+      - formats
+      properties:
+        sourceType:
+          anyOf:
+          - $ref: "#/components/schemas/SourceType"
+          - type: "null"
+        sourceIdentifier:
+          anyOf:
+          - $ref: "#/components/schemas/SourceIdentifier"
+          - type: "null"
+        formats:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/ImportExportFormat"
+          minItems: 1
+        languageId:
+          type:
+          - string
+          - "null"
+    ExportResponse:
+      type: object
+      properties:
+        languageId:
+          type:
+          - string
+          - "null"
+        id:
+          anyOf:
+          - $ref: "#/components/schemas/UUID"
+          - type: "null"
+        sourceType:
+          anyOf:
+          - $ref: "#/components/schemas/SourceType"
+          - type: "null"
+        sourceIdentifier:
+          anyOf:
+          - $ref: "#/components/schemas/SourceIdentifier"
+          - type: "null"
+        actor:
+          anyOf:
+          - $ref: "#/components/schemas/Actor"
+          - type: "null"
+        workspaceId:
+          anyOf:
+          - $ref: "#/components/schemas/UUID"
+          - type: "null"
+        status:
+          anyOf:
+          - $ref: "#/components/schemas/Status"
+          - type: "null"
+        result:
+          anyOf:
+          - $ref: "#/components/schemas/Result"
+          - type: "null"
+        errors:
+          type: array
+          items:
+            type: string
+        createdAt:
+          anyOf:
+          - $ref: "#/components/schemas/Instant"
+          - type: "null"
+        updatedAt:
+          anyOf:
+          - $ref: "#/components/schemas/Instant"
+          - type: "null"
+    ImportExportFormat:
+      type: string
+      enum:
+      - LDIF
+      - XLSX
+    Instant:
+      type: string
+      format: date-time
+      examples:
+      - 2022-03-10T16:15:50Z
+    MetaData:
+      type: object
+      properties:
+        factSheetType:
+          type:
+          - string
+          - "null"
+        numberOfColumns:
+          type: integer
+          format: int32
+        numberOfFactSheets:
+          type: integer
+          format: int32
+    Metadata:
+      type: object
+      properties:
+        _links:
+          type:
+          - object
+          - "null"
+          additionalProperties:
+            type: string
+        pageSize:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int32
+    Result:
+      type: object
+      properties:
+        artifacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Artifact"
+        metaData:
+          anyOf:
+          - $ref: "#/components/schemas/MetaData"
+          - type: "null"
+    SourceIdentifier:
+      type: object
+    SourceType:
+      type: string
+      enum:
+      - BOOKMARK
+    Status:
+      type: string
+      enum:
+      - NEW
+      - PENDING
+      - DONE
+      - ERROR
+      - CANCELLED
+    UUID:
+      type: string
+      format: uuid
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+paths:
+  /exports:
+    get:
+      summary: List export jobs
+      tags:
+      - Exports
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportListResponse"
+      security:
+      - oauth: []
+    post:
+      summary: Create a new export job
+      tags:
+      - Exports
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+        "400":
+          description: Bad Request
+      security:
+      - oauth: []
+  /exports/{id}:
+    get:
+      summary: Return export job for provided id
+      tags:
+      - Exports
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+      security:
+      - oauth: []
+  /exports/{id}/{type}:
+    get:
+      summary: Return an export from the specified type
+      tags:
+      - Exports
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream: {}
+      security:
+      - oauth: []
+info:
+  title: excel-export API
+  version: 1.0.0-SNAPSHOT
+servers:
+- url: /services/import-export/v1

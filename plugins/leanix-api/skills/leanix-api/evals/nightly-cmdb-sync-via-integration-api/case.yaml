@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: nightly-cmdb-sync-via-integration-api
+expected_outcome: |
+  sync_servers.py builds an LDIF from the CSV (connectorType, connectorId, connectorVersion,
+  lxVersion, processingDirection inbound, processingMode partial, content items keyed by serial and
+  app_id) and sends it to POST /services/integration-api/v1/synchronizationRuns with start=true
+  after exchanging LEANIX_API_TOKEN at /services/mtm/v1/oauth2/token. It polls /status until a
+  terminal state (FINISHED, FAILED or STOPPED), reads /warnings and exits non-zero on failure or
+  ERROR warnings. The processor configuration matches fact sheets by external id, writes only
+  CMDB-owned fields, creates fact sheets before the relation (later run level), and is installed
+  once by an Admin rather than uploaded by every nightly run. README.md lists the prerequisites
+  (Integration API enabled, the processor configuration, a technical user and its role), a safe
+  first run with test=true or the UI Test Run, and why partial mode never archives while full mode
+  with a deletionScope would.
+context:
+  scaffold_script: place-files.sh

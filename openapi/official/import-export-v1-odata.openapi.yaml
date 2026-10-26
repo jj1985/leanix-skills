@@ -1,0 +1,168 @@
+---
+openapi: 3.1.0
+info:
+  title: OData Export API
+  description: |
+    Provides OData v4 access to LeanIX fact sheet data via bookmark-scoped entity sets.
+    Two service roots are available: BookmarkService.svc (full output) and
+    BookmarkDataService.svc (key-value output).
+  version: 1.0.0-SNAPSHOT
+servers:
+- url: /services/import-export/v1/odata
+paths:
+  /BookmarkService.svc/:
+    get:
+      summary: OData service document
+      description: Lists all available entity sets for the authenticated workspace.
+      operationId: bookmarkServiceDocument
+      security:
+      - basic: []
+      responses:
+        "200":
+          description: OData service document
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+  /BookmarkService.svc/$metadata:
+    get:
+      summary: OData metadata document
+      description: Returns the CSDL (Common Schema Definition Language) XML schema
+        for the workspace data model.
+      operationId: bookmarkServiceMetadata
+      security:
+      - basic: []
+      responses:
+        "200":
+          description: CSDL XML metadata document
+          content:
+            application/xml:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+  /BookmarkService.svc/{entitySetName}:
+    get:
+      summary: Query OData entity collection
+      description: |
+        Returns fact sheet data for the given bookmark entity set.
+        Supports OData query options: $count, $skip, $top, $skiptoken.
+      operationId: bookmarkServiceEntityCollection
+      security:
+      - basic: []
+      parameters:
+      - name: entitySetName
+        in: path
+        required: true
+        description: The bookmark ID (UUID) used as entity set name
+        schema:
+          type: string
+      - name: $skip
+        in: query
+        schema:
+          type: integer
+      - name: $top
+        in: query
+        schema:
+          type: integer
+      - name: $count
+        in: query
+        schema:
+          type: boolean
+      - name: $skiptoken
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OData entity collection
+          content:
+            application/json:
+              schema:
+                type: object
+        "401":
+          description: Unauthorized
+  /BookmarkDataService.svc/:
+    get:
+      summary: OData service document (key-value output)
+      description: Same as BookmarkService.svc but forces key-value output format.
+      operationId: bookmarkDataServiceDocument
+      security:
+      - basic: []
+      responses:
+        "200":
+          description: OData service document
+          content:
+            application/json:
+              schema:
+                type: object
+        "401":
+          description: Unauthorized
+  /BookmarkDataService.svc/$metadata:
+    get:
+      summary: OData metadata document (key-value output)
+      operationId: bookmarkDataServiceMetadata
+      security:
+      - basic: []
+      responses:
+        "200":
+          description: CSDL XML metadata document
+          content:
+            application/xml:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+  /BookmarkDataService.svc/{entitySetName}:
+    get:
+      summary: Query OData entity collection (key-value output)
+      description: |
+        Returns fact sheet data for the given bookmark entity set in key-value format.
+        Supports OData query options: $count, $skip, $top, $skiptoken.
+      operationId: bookmarkDataServiceEntityCollection
+      security:
+      - basic: []
+      parameters:
+      - name: entitySetName
+        in: path
+        required: true
+        description: The bookmark ID (UUID) used as entity set name
+        schema:
+          type: string
+      - name: $skip
+        in: query
+        schema:
+          type: integer
+      - name: $top
+        in: query
+        schema:
+          type: integer
+      - name: $count
+        in: query
+        schema:
+          type: boolean
+      - name: $skiptoken
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OData entity collection (key-value)
+          content:
+            application/json:
+              schema:
+                type: object
+        "401":
+          description: Unauthorized
+components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+      description: Use your LeanIX API token for authentication. Enter `apitoken`
+        as username and your API token as password.

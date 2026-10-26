@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: setup-technical-user-and-first-call
+expected_outcome: |
+  setup.md is a complete, correct admin runbook. An Admin creates a Technical User under
+  Administration > Technical Users > New Technical User with the Viewer role (read-only is enough)
+  and an expiry date; the API token is shown once and stored in a secrets manager. The script
+  exchanges the token at POST https://acme-eu.leanix.net/services/mtm/v1/oauth2/token (HTTP Basic
+  apitoken:<token>, form body grant_type=client_credentials), caches the one-hour JWT and
+  re-exchanges it before expiry, and sends Authorization: Bearer to /services/pathfinder/v1/graphql
+  with an allFactSheets query for Applications that pages with first/after and reads
+  relApplicationToITComponent through an inline fragment. It proves the credential is read-only
+  without changing data, explains the 1,800 requests per minute limit and HTTP 429, separates an
+  expired JWT from an expired or replaced API token, and documents rotation with Replace token.

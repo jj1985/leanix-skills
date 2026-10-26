@@ -1,0 +1,10 @@
+# Changelog
+
+## 1.0.0 - 2026-10-26
+
+- Initial release of the `leanix-api` plugin, built from the SAP LeanIX developer guide and administration documentation on the SAP Help Portal and the platform's public OpenAPI specifications.
+- Skill references: authentication and access (technical users, token exchange, hosts, roles and permissions, custom roles, virtual workspaces, least privilege, admin tooling, MTM user administration, rate limits and audit, zero-to-first-call checklist, troubleshooting), GraphQL API (reading, facet filters, pagination, mutations and patch cookbook, tags/subscriptions/comments/documents/event log, data model discovery, errors and limits, worked examples), Integration API (LDIF, processor anatomy and types, JUEL cheat sheet, run lifecycle, safety, complete example, troubleshooting), other APIs (webhooks, Metrics v2, Import/Export, Pathfinder REST, MCP server, custom reports, surveys and other services) and gotchas.
+- Curated OpenAPI 3.1 spec (91 paths, 115 operations, 324 schemas) generated from SAP's public specs for the MTM token endpoint and user management, Pathfinder (GraphQL endpoint, fact sheets, models, bookmarks, exports), Integration API, Webhooks, Metrics v2 and Import/Export, with the official specs preserved under `openapi/official/`.
+- Snapshot of 30 official documentation pages.
+- Dependency-free Python client and CLI (`leanix_api.py`) with token exchange and caching, 401/429 handling, workspace guard, permission probe, data model and facet discovery, GraphQL queries with cursor pagination and CSV export, JSON-Patch helpers and mutations (create, update with revision retry, relate, tag, archive, recover, subscribe, comment, event log), Integration API runs (create, start, poll, warnings, results, processor configurations), webhooks (list, status, event tags, PUSH creation, deliveries, PULL), Metrics v2 schemas and points, Pathfinder and Import/Export exports, Excel import, and MTM users, permissions, invitations and technical users.
+- Three eval cases for `claude plugin eval`.

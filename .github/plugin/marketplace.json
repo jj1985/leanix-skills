@@ -1,0 +1,45 @@
+{
+  "name": "leanix",
+  "owner": {
+    "name": "jj1985"
+  },
+  "metadata": {
+    "description": "Plugins for integrating with and administering SAP LeanIX through its GraphQL, Integration, Webhooks, Metrics and MTM APIs",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "leanix-api",
+      "description": "Skill for the SAP LeanIX APIs with a focus on getting access set up correctly and working with fact sheets: technical users and API tokens, the OAuth2 client-credentials token exchange, Admin/Member/Viewer roles, per-type permissions, custom roles and virtual workspaces (ACEs), least-privilege choices per integration, 401/403/429 troubleshooting; the GraphQL API (allFactSheets facet filters, cursor pagination, inline fragments, createFactSheet/updateFactSheet JSON patches for fields, lifecycle, tags, relations, external ids, archiving); the Integration API (LDIF, processors, JUEL, synchronization runs, deletion scope); webhooks, Metrics v2, Excel import/export, Pathfinder REST, the MTM user-management API and the SAP LeanIX MCP server. Includes references, an official docs snapshot, a curated OpenAPI 3.1 spec and a dependency-free Python client/CLI.",
+      "version": "1.0.0",
+      "source": "./plugins/leanix-api",
+      "author": {
+        "name": "jj1985",
+        "url": "https://github.com/jj1985"
+      },
+      "homepage": "https://github.com/jj1985/leanix-skills",
+      "repository": "https://github.com/jj1985/leanix-skills",
+      "license": "MIT",
+      "keywords": [
+        "leanix",
+        "sap-leanix",
+        "enterprise-architecture",
+        "fact-sheets",
+        "graphql",
+        "integration-api",
+        "ldif",
+        "webhooks",
+        "technical-user",
+        "api-token",
+        "oauth2",
+        "rbac",
+        "mtm",
+        "mcp",
+        "openapi",
+        "copilot",
+        "claude-code"
+      ],
+      "category": "Developer Tools"
+    }
+  ]
+}

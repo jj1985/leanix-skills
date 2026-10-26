@@ -1,0 +1,1779 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Webhooks",
+    "description" : "Sends notifications on trigger events to subscribed observers.",
+    "contact" : {
+      "name" : "LeanIX"
+    },
+    "version" : "2.0.119"
+  },
+  "servers" : [ {
+    "url" : "/services/webhooks/v1"
+  } ],
+  "tags" : [ {
+    "name" : "subscriptions"
+  }, {
+    "name" : "events"
+  } ],
+  "paths" : {
+    "/customEventTags" : {
+      "get" : {
+        "tags" : [ "customEventTags" ],
+        "summary" : "Get custom event tags with an identifier for the given workspace and service.",
+        "description" : "Get custom event tags with an identifier for the given workspace and service. Restricted to SAP LeanIX internal use only.",
+        "operationId" : "getCustomEventTags",
+        "parameters" : [ {
+          "name" : "identifier",
+          "in" : "query",
+          "description" : "The identifier of the custom event tag.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "workspaceId",
+          "in" : "query",
+          "description" : "The workspace ID for which to retrieve the custom event tag.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "service",
+          "in" : "query",
+          "description" : "The service name for which to retrieve the custom event tag.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return custom event tags with an identifier for the given workspace and service.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomEventTagContextListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "customEventTags" ],
+        "summary" : "Create a custom event tag.",
+        "description" : "Create a custom event tag. Restricted to SAP LeanIX internal use only.",
+        "operationId" : "createCustomEventTag",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomEventTagContextRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Return the created custom event tag.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomEventTagContextResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/customEventTags/{id}" : {
+      "put" : {
+        "tags" : [ "customEventTags" ],
+        "summary" : "Update a custom event tag.",
+        "description" : "Update a custom event tag. Restricted to SAP LeanIX internal use only.",
+        "operationId" : "updateCustomEventTag",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomEventTagContextRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Return the updated custom event tag.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomEventTagContextResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Custom event tag not found."
+          },
+          "409" : {
+            "description" : "Service, identifier and workspaceId can not be changed."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "customEventTags" ],
+        "summary" : "Delete a custom event tag.",
+        "description" : "Delete a custom event tag. Restricted to SAP LeanIX internal use only.",
+        "operationId" : "deleteCustomEventTag",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Custom event tag is deleted."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/events" : {
+      "post" : {
+        "tags" : [ "events" ],
+        "summary" : "Create a new event.",
+        "description" : "Create a new event. Restricted to SAP LeanIX internal use only.",
+        "operationId" : "createEvent",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Event"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Event created.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/events/batch" : {
+      "post" : {
+        "tags" : [ "events" ],
+        "summary" : "Create a batch of new events.",
+        "description" : "Create a batch of new events. Restricted to LeanIX internal use only.",
+        "operationId" : "createEventBatch",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/EventBatch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Events created.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventListResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/eventTags" : {
+      "get" : {
+        "tags" : [ "eventTags" ],
+        "summary" : "Get all event tags for the given workspace.",
+        "description" : "Get all event tags for the given workspace.",
+        "operationId" : "getEventTags",
+        "parameters" : [ {
+          "name" : "language",
+          "in" : "query",
+          "description" : "Language in which the translations should be loaded (e.g. 'en')",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return all event tags for the given workspace.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventTagsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get all subscriptions.",
+        "description" : "Get all subscriptions.",
+        "operationId" : "getSubscriptions",
+        "parameters" : [ {
+          "name" : "workspaceId",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "identifier",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return all subscriptions.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionListResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Create a new subscription.",
+        "description" : "Create a new subscription.",
+        "operationId" : "createSubscription",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Subscription"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Return the new subscription.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/{id}" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get a subscription by id.",
+        "description" : "Get a subscription by id.",
+        "operationId" : "getSubscription",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return subscription with the given id.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Update a subscription by id.",
+        "description" : "Update a subscription by id.",
+        "operationId" : "updateSubscription",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Subscription"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Return the updated subscription.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Delete a subscription by id.",
+        "description" : "Delete a subscription by id.",
+        "operationId" : "deleteSubscription",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the deleted subscription.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/{id}/deliveries" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get the deliveries of a given subscription.",
+        "description" : "Get the deliveries of a given subscription.",
+        "operationId" : "getSubscriptionDeliveries",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "The page number to access (1 indexed, defaults to 1)",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "The page size requested (defaults to 30, max 100)",
+          "schema" : {
+            "maximum" : 100,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 30
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Comma-separated list of sorting (default createdAt-DESC)",
+          "schema" : {
+            "type" : "string",
+            "default" : "createdAt-desc"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the deliveries for a given subscription.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DeliveryListResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/{id}/events" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get the next batch of events for a PULL subscription.",
+        "description" : "Get the next batch of events for a PULL subscription.",
+        "operationId" : "getSubscriptionEvents",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the subscription to pull events from. Subscription must be of type PULL.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "autoCommit",
+          "in" : "query",
+          "description" : "Should events be marked as retrieved automatically (waives at-least-once delivery guarantee).",
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the next batch of events for a given PULL subscription.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PullResultResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/{id}/status" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get subscription status by subscription id.",
+        "description" : "Get subscription status by subscription id.",
+        "operationId" : "getSubscriptionStatus",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return subscription status based on subscription id.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionStatusResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Subscription is not a PUSH subscription."
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/status" : {
+      "get" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Get subscription statuses for all subscriptions.",
+        "description" : "Get subscription statuses for all subscriptions.",
+        "operationId" : "getSubscriptionStatuses",
+        "responses" : {
+          "200" : {
+            "description" : "Return subscription status for all subscriptions.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SubscriptionStatusListResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    },
+    "/subscriptions/{id}/cursor" : {
+      "put" : {
+        "tags" : [ "subscriptions" ],
+        "summary" : "Marks events up to the given offset as consumed for the given subscription.",
+        "description" : "Marks events up to the given offset as consumed for the given subscription.",
+        "operationId" : "updateSubscriptionCursor",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the subscription to pull events from. Subscription must be of type PULL.",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The cursor where to start the next getSubscriptionEvents pull",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Cursor"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Events where successfully marked as consumed.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BasicResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Permission denied."
+          }
+        },
+        "security" : [ {
+          "oauth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "ApiError" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "messages" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "CustomEventTag" : {
+        "type" : "object",
+        "properties" : {
+          "tag" : {
+            "type" : "string"
+          },
+          "options" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CustomEventTag"
+            }
+          }
+        }
+      },
+      "CustomEventTagContextResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/CustomEventTagContextResponseData"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "CustomEventTagContextResponseData" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "identifier" : {
+            "type" : "string"
+          },
+          "workspaceId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "service" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CustomEventTag"
+            }
+          }
+        }
+      },
+      "CustomEventTagContextRequest" : {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "type" : "string"
+          },
+          "workspaceId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "service" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CustomEventTag"
+            }
+          }
+        }
+      },
+      "CustomEventTagContextListResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CustomEventTagContextResponseData"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "Event" : {
+        "required" : [ "tags" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "readOnly" : true
+          },
+          "createdAt" : {
+            "type" : "string",
+            "description" : "The date at which the event was originally created.",
+            "format" : "date-time"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "sourceName" : {
+            "type" : "string",
+            "description" : "The name of the source system."
+          },
+          "sourceId" : {
+            "type" : "string",
+            "description" : "The id in the source system."
+          },
+          "sourceUrl" : {
+            "type" : "string",
+            "description" : "The url of the source system."
+          },
+          "workspaceId" : {
+            "type" : "string",
+            "description" : "An optional UUID if the event is related to a workspace.",
+            "format" : "uuid"
+          },
+          "userId" : {
+            "type" : "string",
+            "description" : "An optional UUID if the event is related to a user.",
+            "format" : "uuid"
+          },
+          "tags" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "description" : "a list of tags describing the nature of this event, used to find subscriptions for this event",
+            "items" : {
+              "type" : "string",
+              "description" : "a list of tags describing the nature of this event, used to find subscriptions for this event"
+            }
+          },
+          "payload" : {
+            "type" : "object",
+            "description" : "Contains the event the publisher wants to send wrapped inside this webhooks event here."
+          },
+          "sequenceInfo" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "EventResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/Event"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "EventListResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event"
+            }
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "EventBatch" : {
+        "required" : [ "events" ],
+        "type" : "object",
+        "properties" : {
+          "events" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event"
+            }
+          }
+        }
+      },
+      "EventTag" : {
+        "type" : "object",
+        "properties" : {
+          "tag" : {
+            "type" : "string"
+          },
+          "label" : {
+            "type" : "string"
+          },
+          "options" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventTag"
+            }
+          }
+        }
+      },
+      "EventTagsResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventTag"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "PullSubscriptionResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionResponseData"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "maxBatchSize" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        } ]
+      },
+      "PushSubscriptionResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionResponseData"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "targetUrl" : {
+              "type" : "string"
+            },
+            "targetMethod" : {
+              "type" : "string"
+            },
+            "authorizationHeader" : {
+              "type" : "string"
+            },
+            "authorization" : {
+              "$ref" : "#/components/schemas/SubscriptionAuthorizationResponse"
+            },
+            "callback" : {
+              "type" : "string"
+            },
+            "firstTimeDeliveryFailed" : {
+              "type" : "string",
+              "format" : "date-time"
+            },
+            "errorCount" : {
+              "type" : "integer",
+              "format" : "int32"
+            },
+            "lastDeliveryStatus" : {
+              "type" : "integer",
+              "format" : "int32"
+            },
+            "ignoreError" : {
+              "type" : "boolean"
+            },
+            "deactivationNotificationEnabled" : {
+              "type" : "boolean",
+              "description" : "Email notification is sent on automatic subscription deactivation."
+            }
+          }
+        } ]
+      },
+      "RequestParameterResponse" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SubscriptionAuthorizationHeaderResponse" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionAuthorizationResponse"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "authHeader" : {
+              "type" : "string"
+            }
+          }
+        } ]
+      },
+      "SubscriptionAuthorizationOAuthResponse" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionAuthorizationResponse"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "oauthUrl" : {
+              "type" : "string",
+              "format" : "url"
+            },
+            "clientId" : {
+              "type" : "string"
+            },
+            "scopes" : {
+              "uniqueItems" : true,
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "credentialsLocation" : {
+              "type" : "string",
+              "enum" : [ "AUTH_HEADER", "URL_ENCODED_REQUEST_BODY" ]
+            },
+            "queryParameters" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestParameterResponse"
+              }
+            },
+            "bodyParameters" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestParameterResponse"
+              }
+            }
+          }
+        } ]
+      },
+      "SubscriptionAuthorizationResponse" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "AUTH_HEADER", "OAUTH" ]
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "type"
+        }
+      },
+      "SubscriptionResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/SubscriptionResponseData"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "SubscriptionResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "properties" : {
+          "visibility" : {
+            "$ref" : "#/components/schemas/SubscriptionVisibility"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "workspaceId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "tagSets" : {
+            "type" : "array",
+            "items" : {
+              "uniqueItems" : true,
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          },
+          "payloadMode" : {
+            "type" : "string",
+            "enum" : [ "DEFAULT", "WRAPPED_EVENT", "NO_PAYLOAD" ]
+          },
+          "userId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "deliveryType" : {
+            "type" : "string",
+            "enum" : [ "PUSH", "PULL" ]
+          },
+          "workspaceConstraint" : {
+            "type" : "string",
+            "enum" : [ "WORKSPACE", "NO_WORKSPACE", "ANY" ]
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "identifier" : {
+            "type" : "string"
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "deliveryType"
+        }
+      },
+      "SubscriptionVisibility" : {
+        "type" : "string",
+        "description" : "Specifies the visibility of the subscription. \nPRIVATE: The subscription is only visible to the user who created it.\nWORKSPACE: The subscription is visible to all users in the workspace.",
+        "enum" : [ "PRIVATE", "WORKSPACE" ]
+      },
+      "PullSubscription" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Subscription"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "maxBatchSize" : {
+              "maximum" : 51200,
+              "minimum" : 1,
+              "type" : "integer",
+              "description" : "Used when 'deliveryType' is 'PULL'. The desired maximum size (in kiB) of the returned batch of events. Default is 512. This is an approximate number: Actual responses may be smaller, or bigger when there is one single event exceeding maxBatchSize.",
+              "format" : "int32"
+            }
+          }
+        } ]
+      },
+      "PushSubscription" : {
+        "required" : [ "deliveryType", "targetMethod", "targetUrl" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Subscription"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "targetUrl" : {
+              "type" : "string",
+              "description" : "Used and required when 'deliveryType' is 'PUSH'."
+            },
+            "targetMethod" : {
+              "type" : "string",
+              "description" : "Used when 'deliveryType' is 'PUSH'."
+            },
+            "authorizationHeader" : {
+              "maxLength" : 4096,
+              "type" : "string",
+              "description" : "Used when 'deliveryType' is 'PUSH'."
+            },
+            "authorization" : {
+              "$ref" : "#/components/schemas/SubscriptionAuthorizationRequest"
+            },
+            "callback" : {
+              "type" : "string",
+              "description" : "Used when 'deliveryType' is 'PUSH'."
+            },
+            "firstTimeDeliveryFailed" : {
+              "type" : "string",
+              "format" : "date-time"
+            },
+            "errorCount" : {
+              "type" : "integer",
+              "format" : "int32"
+            },
+            "lastDeliveryStatus" : {
+              "type" : "integer",
+              "description" : "Used when 'deliveryType' is 'PUSH'.",
+              "format" : "int32"
+            },
+            "ignoreError" : {
+              "type" : "boolean",
+              "description" : "Don't re-send events that caused an error on PUSH. Shirks the at-least-once policy!"
+            },
+            "deactivationNotificationEnabled" : {
+              "type" : "boolean",
+              "description" : "Email notification is sent on automatic subscription deactivation."
+            }
+          }
+        } ]
+      },
+      "RequestParameterRequest" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Subscription" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "properties" : {
+          "visibility" : {
+            "$ref" : "#/components/schemas/SubscriptionVisibility"
+          },
+          "description" : {
+            "maxLength" : 2048,
+            "type" : "string",
+            "description" : "Provides a description for the subscription."
+          },
+          "workspaceId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "tagSets" : {
+            "type" : "array",
+            "items" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          },
+          "payloadMode" : {
+            "type" : "string",
+            "description" : "Specifies the behavior of the payload property of a delivery for this subscription:  DEFAULT -> get only the payload property of the event (default behavior), WRAPPED_EVENT -> get the whole serialized event as the payload, NO_PAYLOAD -> get always an empty {} payload",
+            "enum" : [ "DEFAULT", "WRAPPED_EVENT", "NO_PAYLOAD" ]
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "deliveryType" : {
+            "type" : "string",
+            "description" : "The discriminator property to differentiate between subscription types.",
+            "enum" : [ "PUSH", "PULL" ]
+          },
+          "workspaceConstraint" : {
+            "type" : "string",
+            "description" : "Specifies how the workspaceId is used on events:  WORKSPACE -> get events with specified workspaceId (workspaceId must not be null), NO_WORKSPACE -> get events that have no workspaceId (workspaceId must be null), ANY -> get all events regardless if a workspaceId is assigned or not on the event",
+            "enum" : [ "WORKSPACE", "NO_WORKSPACE", "ANY" ]
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "identifier" : {
+            "maxLength" : 255,
+            "type" : "string"
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "deliveryType"
+        }
+      },
+      "SubscriptionAuthorizationHeaderRequest" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionAuthorizationRequest"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "authHeader" : {
+              "type" : "string"
+            }
+          }
+        } ]
+      },
+      "SubscriptionAuthorizationOAuthRequest" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionAuthorizationRequest"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "oauthUrl" : {
+              "type" : "string",
+              "format" : "url"
+            },
+            "clientId" : {
+              "type" : "string"
+            },
+            "clientSecret" : {
+              "type" : "string"
+            },
+            "scopes" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "credentialsLocation" : {
+              "type" : "string",
+              "enum" : [ "AUTH_HEADER", "URL_ENCODED_REQUEST_BODY" ]
+            },
+            "queryParameters" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestParameterRequest"
+              }
+            },
+            "bodyParameters" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestParameterRequest"
+              }
+            }
+          }
+        } ]
+      },
+      "SubscriptionAuthorizationRequest" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "AUTH_HEADER", "OAUTH" ]
+          }
+        },
+        "description" : "Used when 'deliveryType' is 'PUSH'.",
+        "discriminator" : {
+          "propertyName" : "type"
+        }
+      },
+      "Delivery" : {
+        "required" : [ "targetUrl" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "description" : "The date at which the delivery was originally created.",
+            "format" : "date-time",
+            "example" : "2017-08-28T08:25:33.654Z"
+          },
+          "requestHeaders" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "payload" : {
+            "type" : "string"
+          },
+          "targetUrl" : {
+            "type" : "string"
+          },
+          "targetMethod" : {
+            "type" : "string"
+          },
+          "basicAuth" : {
+            "type" : "string"
+          },
+          "success" : {
+            "type" : "boolean"
+          },
+          "httpStatus" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "responseBody" : {
+            "type" : "string"
+          },
+          "responseHeaders" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "object"
+              }
+            }
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "duration" : {
+            "type" : "integer",
+            "description" : "Duration in milliseconds.",
+            "format" : "int64"
+          },
+          "eventProcessingTime" : {
+            "type" : "integer",
+            "description" : "Time it took to process the event in milliseconds.",
+            "format" : "int64"
+          },
+          "eventId" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }
+      },
+      "DeliveryListResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Delivery"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Cursor" : {
+        "required" : [ "offset" ],
+        "type" : "object",
+        "properties" : {
+          "offset" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "PullEvent" : {
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "type" : "string"
+          },
+          "cursor" : {
+            "$ref" : "#/components/schemas/Cursor"
+          }
+        }
+      },
+      "PullResult" : {
+        "type" : "object",
+        "properties" : {
+          "events" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PullEvent"
+            }
+          },
+          "nextCursor" : {
+            "$ref" : "#/components/schemas/Cursor"
+          }
+        }
+      },
+      "PullResultResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/PullResult"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "PullSubscriptionStatusResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionStatusResponseData"
+        } ]
+      },
+      "PushSubscriptionStatusResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SubscriptionStatusResponseData"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "firstTimeDeliveryFailed" : {
+              "type" : "string",
+              "format" : "date-time"
+            },
+            "errorCount" : {
+              "type" : "integer",
+              "format" : "int32"
+            },
+            "lastDeliveryStatus" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        } ]
+      },
+      "SubscriptionStatusResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/SubscriptionStatusResponseData"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "SubscriptionStatusResponseData" : {
+        "required" : [ "deliveryType" ],
+        "type" : "object",
+        "properties" : {
+          "subscriptionId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "deliveryType" : {
+            "type" : "string",
+            "enum" : [ "PUSH", "PULL" ]
+          },
+          "queuedEvents" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "deliveryType"
+        }
+      },
+      "SubscriptionListResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SubscriptionResponseData"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "SubscriptionStatusListResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SubscriptionStatusResponseData"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "BasicResponse" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "OK", "ERROR" ]
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ApiError"
+            }
+          },
+          "total" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "oauth" : {
+        "type" : "oauth2",
+        "flows" : {
+          "clientCredentials" : {
+            "tokenUrl" : "/services/mtm/v1/oauth2/token",
+            "scopes" : { }
+          }
+        }
+      }
+    }
+  }
+}

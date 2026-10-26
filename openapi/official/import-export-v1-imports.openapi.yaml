@@ -1,0 +1,122 @@
+---
+openapi: 3.1.0
+tags:
+- name: Imports
+  description: Manage import jobs
+components:
+  securitySchemes:
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /services/mtm/v1/oauth2/token
+  schemas:
+    UUID:
+      type: string
+      format: uuid
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+paths:
+  /imports:
+    post:
+      summary: Uploads and validates an excel file for import
+      tags:
+      - Imports
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth: []
+  /imports/{importId}:
+    post:
+      summary: Executes the import with the given id
+      tags:
+      - Imports
+      parameters:
+      - name: importId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth: []
+    get:
+      summary: Retrieves the status of an import operation
+      tags:
+      - Imports
+      parameters:
+      - name: importId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth: []
+  /imports/{importId}/cancel:
+    post:
+      summary: Cancels an import job
+      tags:
+      - Imports
+      parameters:
+      - name: importId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth: []
+  /imports/{importId}/result:
+    get:
+      summary: Downloads specified import result file
+      tags:
+      - Imports
+      parameters:
+      - name: importId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream: {}
+      security:
+      - oauth: []
+info:
+  title: excel-import API
+  version: 1.0.0-SNAPSHOT
+servers:
+- url: /services/import-export/v1
